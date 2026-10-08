@@ -7,3 +7,5 @@ Use Visualizar perfil e Visualizar tela na barra superior. Os menus também nave
 Nenhuma conta, documento, senha, token ou registro real foi exportado. O HTML é uma apresentação visual, não a aplicação completa com banco e autenticação.
 
 Versão: 7 de outubro de 2026.
+
+Página inicial redesenhada a partir da referência fornecida: escultura de cuidado em bronze, paleta laranja/marfim, vagas em lista e parallax suave no desktop. A imagem está incorporada no HTML. O movimento é desativado no celular e com a preferência de movimento reduzido.

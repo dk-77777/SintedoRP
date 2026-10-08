@@ -346,7 +346,11 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
       </section>
     );
   return (
-    <div className="live-application" data-private={privateArea}>
+    <div
+      className="live-application"
+      data-private={privateArea}
+      data-home={path === "/"}
+    >
       <a className="skip-link" href="#conteudo">
         Pular para o conteúdo
       </a>

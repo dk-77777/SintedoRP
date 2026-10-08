@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DemoProvider } from "@/demo/provider";
 import "@/styles/globals.css";
 import "@/styles/redesign.css";
+import "@/styles/home.css";
 
 export const metadata: Metadata = {
   title: {

@@ -58,9 +58,7 @@ try {
   await page.setViewportSize({ width: 390, height: 960 });
   await page.locator("#preview-role").selectOption("trabalhador");
   await expect(page.locator("#workspace-navigation")).toBeHidden();
-  await page
-    .getByRole("button", { name: "Menu", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Menu", exact: true }).click();
   await expect(page.locator("#workspace-navigation")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.locator("#workspace-navigation")).toBeHidden();
@@ -98,10 +96,7 @@ try {
   await page.locator("#preview-role").selectOption("publico");
   await page.getByRole("button", { name: "Abrir menu", exact: true }).click();
   await expect(page.locator(".header-nav")).toHaveClass(/open/);
-  await page
-    .getByRole("link", { name: "Vagas", exact: true })
-    .first()
-    .click();
+  await page.getByRole("link", { name: "Vagas", exact: true }).first().click();
   await page.getByRole("button", { name: "Filtros", exact: true }).click();
   await expect(page.locator("#job-filters")).toBeVisible();
   await page.keyboard.press("Escape");
@@ -125,17 +120,39 @@ try {
   await expect(page.locator("#preview-help")).toBeVisible();
   await page.goto("about:blank");
   await page.setContent(source);
+  await page.setViewportSize({ width: 1440, height: 960 });
+  const sculpture = page.locator(".home-sculpture-image");
+  await sculpture.evaluate((image) => (image as HTMLImageElement).decode());
+  expect(await sculpture.getAttribute("src")).toMatch(
+    /^data:image\/webp;base64,/,
+  );
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const motionLayer = page.locator(".home-sculpture-motion");
+  const beforeScroll = await motionLayer.evaluate(
+    (node) => getComputedStyle(node).transform,
+  );
+  await page.evaluate(() => window.scrollTo(0, 350));
+  await expect
+    .poll(() =>
+      motionLayer.evaluate((node) => getComputedStyle(node).transform),
+    )
+    .not.toBe(beforeScroll);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(motionLayer).toHaveCSS("transform", "none");
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 960 });
     await page.screenshot({
       path: resolve("artifacts/previa-visual", `arquivo-aberto-${width}.png`),
       fullPage: true,
+      animations: "disabled",
     });
   }
   expect(errors).toEqual([]);
   expect(requests).toEqual([]);
   console.log(
-    `${views.length} telas verificadas em 360, 768 e 1440 px; menus, diálogos, conversas, CPF/CNPJ e senha passaram. Zero exceções JavaScript e zero requisições HTTP.`,
+    `${views.length} telas verificadas em 360, 768 e 1440 px; menus, diálogos, conversas, CPF/CNPJ e senha passaram. Escultura offline, parallax e movimento reduzido verificados. Zero exceções JavaScript e zero requisições HTTP.`,
   );
 } finally {
   await browser.close();

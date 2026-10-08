@@ -20,4 +20,7 @@ if (!existsSync(resolve(output, "server.js")))
 cpSync(resolve(output, "../static"), resolve(output, ".next/static"), {
   recursive: true,
 });
+const publicAssets = resolve(import.meta.dirname, "../public");
+if (existsSync(publicAssets))
+  cpSync(publicAssets, resolve(output, "public"), { recursive: true });
 await import(pathToFileURL(resolve(output, "server.js")).href);
