@@ -45,7 +45,10 @@ const pgImage =
   "postgres@sha256:3645570cccdfa447589da9f57dd740faa29b30938e861289a5574b6ca6b03826";
 const mailImage =
   "axllent/mailpit@sha256:b1f1be18af530d939a11ee8820b379e0c88eeec204d904bfad68862adced3a5a";
-const state = resolve("/workspace/.state/sintedorp");
+const state =
+  process.platform === "win32"
+    ? resolve(local, "postgres-data")
+    : resolve("/workspace/.state/sintedorp");
 mkdirSync(resolve(state, "postgres"), { recursive: true });
 const pgEnv = resolve(local, "postgres.env");
 if (!existsSync(pgEnv))

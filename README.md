@@ -10,7 +10,7 @@ Paleta atual: [laranja queimado, marfim e carvão](docs/PALETA-LARANJA.md), com 
 
 ## Executar no ambiente em nuvem
 
-Requisitos: Node.js 24, npm e Docker com daemon disponível. No checkout:
+Requisitos: Node.js 24, npm e Docker com daemon disponível. No Windows, abra o Docker Desktop e execute os mesmos comandos no PowerShell aberto na pasta extraída:
 
 ```sh
 npm ci
@@ -20,7 +20,7 @@ npm run build
 npm run start
 ```
 
-`services` inicia PostgreSQL 17 e Mailpit com imagens verificadas por digest. Gera segredos aleatórios em arquivos privados somente quando ausentes; preserva configurações e dados existentes. O banco fica em `/workspace/.state/sintedorp/postgres`, fora do checkout. `.env.local` e `.local/` não devem ser compartilhados ou versionados. A caixa local captura e-mails de confirmação e recuperação, sem entrega externa.
+`services` inicia PostgreSQL 17 e Mailpit com imagens verificadas por digest. Gera segredos aleatórios em arquivos privados somente quando ausentes; preserva configurações e dados existentes. O banco fica fora do checkout em `/workspace/.state/sintedorp/postgres` no Linux e macOS e em `.local/postgres-data` no Windows. `.env.local` e `.local/` não devem ser compartilhados ou versionados. A caixa local captura e-mails de confirmação e recuperação, sem entrega externa.
 
 Para editar, use `npm run dev`. A porta padrão é 3000. Se estiver ocupada por um serviço desconhecido, escolha outra e ajuste a origem de autenticação no mesmo processo:
 
