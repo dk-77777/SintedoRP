@@ -1,0 +1,45 @@
+{
+  "name": "conecta-sintedorp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "node scripts/start.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "services": "node scripts/dev-services.mjs",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "deploy:check": "tsx scripts/check-deployment.ts",
+    "deploy:prepare": "node scripts/prepare-deployment.mjs",
+    "admin:grant": "tsx scripts/grant-admin.ts",
+    "test:server": "tsx --test tests/server/*.test.ts",
+    "format": "prettier --write src scripts tests *.ts *.json docs README.md",
+    "test:live": "playwright test -c playwright.live.config.ts"
+  },
+  "dependencies": {
+    "better-auth": "1.7.7",
+    "next": "16.4.0",
+    "nodemailer": "10.0.15",
+    "pg": "8.16.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.1.12"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.56.1",
+    "@types/node": "24.19.1",
+    "@types/nodemailer": "8.0.2",
+    "@types/pg": "8.15.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "prettier": "3.6.2",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  },
+  "type": "module"
+}

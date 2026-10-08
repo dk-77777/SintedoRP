@@ -1,0 +1,16 @@
+:root {
+  --brand: #af4513;
+  --brand-hover: #923b10;
+  --ink: #2d241f;
+  --muted: #75675d;
+  --paper: #fcfaf7;
+  --cream: #f6eee5;
+  --accent-soft: #fae6d8;
+  --line: #e4d6c9;
+  --control-line: #987962;
+  --panel: #33261f;
+  --panel-text: #f8e8d9;
+  --panel-line: #a57b5e;
+  --highlight: #f4ad78;
+  --focus: #af4513;
+}

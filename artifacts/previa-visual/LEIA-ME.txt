@@ -1,0 +1,9 @@
+Conecta SINTEDORP — Prévia visual
+
+Abra Conecta-SINTEDORP-previa.html no Chrome, Edge ou Firefox. Não precisa instalar Node.js, iniciar servidor ou conectar à internet.
+
+Use Visualizar perfil e Visualizar tela na barra superior. Os menus também navegam entre as telas. São 37 telas da interface atual, capturadas com dados fictícios. Formulários, filtros, moderação, envio de mensagens e exportação CSV não executam operações neste arquivo; detalhes expansíveis, menus, mostrar/ocultar senha e diálogos de confirmação funcionam para inspeção.
+
+Nenhuma conta, documento, senha, token ou registro real foi exportado. O HTML é uma apresentação visual, não a aplicação completa com banco e autenticação.
+
+Versão: 7 de outubro de 2026.

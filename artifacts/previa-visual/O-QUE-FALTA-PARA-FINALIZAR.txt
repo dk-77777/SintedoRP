@@ -1,0 +1,29 @@
+CONECTA SINTEDORP — ESTADO DO PROJETO
+7 de outubro de 2026
+
+O QUE JÁ ESTÁ IMPLEMENTADO
+Contas com confirmação de e-mail, recuperação de senha e perfis separados; CPF/CNPJ protegido com validação local; vagas com filtros, revisões e moderação; candidaturas, mensagens privadas, histórico de trabalho e encerramento confirmado pelas partes; avaliações e respostas moderadas; atendimento sindical; relatórios por empresa e CSV; interface responsiva. O redesign reorganiza home e acesso, menu mobile, filtros, painéis com pendências, histórico compacto e relatórios em cartões no celular. Esses fluxos foram verificados no ambiente local.
+
+PARA PUBLICAR A APRESENTAÇÃO ACADÊMICA
+1. Criar os projetos na Vercel e no Supabase, escolher a origem HTTPS e disponibilizar a versão atual do código no GitHub. O código ainda está somente no checkout local, sem commit/push.
+2. Configurar o PostgreSQL externo, aplicar as migrações por conexão de sessão, proteger o acesso às tabelas e cadastrar novos segredos no painel da hospedagem. Configurar o proxy confiável para o limite de autenticação.
+3. Escolher e configurar um provedor SMTP, autorizar o remetente e testar entrega de confirmação/recuperação no domínio final. O e-mail atual usa Mailpit, que captura mensagens apenas no ambiente local.
+4. Executar as checagens de implantação e os fluxos reais no domínio final com contas de teste. Provisionar as contas autorizadas da equipe sindical. Confirmar backup e restauração do banco.
+
+PARA O USO OFICIAL DO SINDICATO
+5. Confirmar identidade visual, nome, contatos, horários de atendimento e responsáveis. Ajustar os textos para a versão pública, incluindo avisos de desenvolvimento e, se desejado, indexação em buscadores.
+6. Finalizar a política institucional de privacidade: responsável pelo tratamento, finalidades/bases legais, retenção, exclusão e canal de atendimento aos direitos dos titulares. Definir as regras de vagas, avaliações e moderação, com as convenções e critérios trabalhistas aplicáveis.
+7. Se a verificação desejada inclui situação cadastral de CPF/CNPJ, escolher e contratar um provedor autorizado, obter credenciais e implementar a consulta externa com finalidade definida. Hoje o sistema confere dígitos e admite verificação manual; ainda não consulta a Receita Federal. Essa integração pode ter custo.
+8. Realizar a revisão final de segurança e acessibilidade e testar carga na hospedagem. Para uma base maior, acrescentar paginação de consultas no servidor; hoje a interface carrega o conjunto de dados autorizado da sessão.
+
+CONDIÇÕES DO PLANO GRATUITO
+Vercel Hobby + Supabase Free foi o caminho recomendado para apresentação acadêmica. As cotas atuais ainda precisam ser conferidas. Vercel Hobby é destinado a uso pessoal/não comercial; uma adoção institucional precisa respeitar os termos atuais ou escolher hospedagem compatível. Domínio próprio, e-mail ou consultas cadastrais podem gerar custo.
+
+ARQUIVO DE PRÉVIA
+Conecta-SINTEDORP-previa.html contém 37 telas atuais com dados fictícios. Ele permite inspecionar a aparência e navegar pelas telas, sem operar cadastro, mensagens ou banco. O aplicativo completo continua dependendo do servidor e das configurações acima.
+
+MODELOS RECOMENDADOS
+GPT-6.1 Sol para implantação e ajustes; GPT-6 Astra para revisão complementar de segurança e regras. A recomendação não altera automaticamente o modelo ativo.
+
+PESQUISA DE REFERÊNCIAS
+O MCP do Mobbin não disponibilizou ferramentas nesta sessão. O redesign foi realizado a partir do diagnóstico do projeto e da direção proposta; não foi feita nem atribuída uma pesquisa ao Mobbin.
