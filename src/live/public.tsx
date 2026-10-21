@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { ConectaFlow } from "./motion/components";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/icon";
@@ -381,216 +383,304 @@ export function Access({
     reset: "Nova senha",
   };
   return (
-    <section className="container page-section access-page">
-      <div className="access-intro">
-        <Title title={titles[mode]} />
-      </div>
-      <div className="form-card">
-        {params.get("confirmado") && (
-          <p role="status">E-mail confirmado. Entre com sua senha.</p>
-        )}
-        {params.get("error") && (
-          <p role="alert">Link inválido ou expirado. Solicite outro.</p>
-        )}
-        {sent ? (
-          <div className="access-success" role="status">
-            <Icon name="check" size={28} />
+    <section className="container access-page" data-mode={mode}>
+      <div className="access-form-side">
+        <Link className="access-back" href="/">
+          <Icon name="arrow" size={15} /> Voltar ao início
+        </Link>
+        <div className="access-form-content">
+          <div className="access-intro">
+            <span className="access-symbol" aria-hidden="true">
+              <Icon name="leaf" size={24} />
+            </span>
+            <Title title={titles[mode]} />
             <p>
-              {mode === "signup"
-                ? "Enviamos um e-mail de confirmação."
-                : mode === "reset"
-                  ? "Senha redefinida. Suas sessões anteriores foram encerradas."
-                  : "Se a conta existir, enviaremos um link de recuperação."}
+              {mode === "login"
+                ? "Bom ter você de volta. Continue suas conexões."
+                : mode === "signup"
+                  ? "O primeiro passo para uma nova conexão."
+                  : mode === "recover"
+                    ? "Vamos ajudar você a voltar para sua conta."
+                    : "Escolha uma nova senha para continuar."}
             </p>
-            <ActionLink href="/entrar">Voltar para entrar</ActionLink>
           </div>
-        ) : (
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setBusy(true);
-              setAccessError("");
-              const form = new FormData(e.currentTarget);
-              try {
-                const email = value(form, "email"),
-                  password = String(form.get("password") ?? "");
-                if (mode === "signup") {
-                  const result = await authClient.signUp.email({
-                    name: value(form, "name"),
-                    email,
-                    password,
-                    callbackURL: `${window.location.origin}/entrar?confirmado=1`,
-                  });
-                  if (result.error) throw new Error(result.error.message);
-                  setSent(true);
-                }
-                if (mode === "login") {
-                  const result = await authClient.signIn.email({
-                    email,
-                    password,
-                  });
-                  if (result.error)
-                    throw new Error(
-                      "Confira seu e-mail, senha e confirmação da conta.",
-                    );
-                  const state = await refresh();
-                  router.push(
-                    state?.user?.roles.length ? "/painel" : "/cadastro/perfil",
-                  );
-                }
-                if (mode === "recover") {
-                  const result = await authClient.requestPasswordReset({
-                    email,
-                    redirectTo: `${window.location.origin}/redefinir-senha`,
-                  });
-                  if (result.error)
-                    throw new Error(
-                      "Não foi possível recuperar agora. Tente novamente.",
-                    );
-                  setSent(true);
-                }
-                if (mode === "reset") {
-                  const token = params.get("token");
-                  if (!token) throw new Error("Link inválido. Solicite outro.");
-                  const result = await authClient.resetPassword({
-                    token,
-                    newPassword: password,
-                  });
-                  if (result.error)
-                    throw new Error(
-                      "Link expirado ou já utilizado. Solicite outro.",
-                    );
-                  setSent(true);
-                }
-              } catch (error) {
-                const message =
-                  error instanceof Error ? error.message : "Falha na conexão.";
-                setAccessError(message);
-                notify(message, "error");
-              } finally {
-                setBusy(false);
-              }
-            }}
-          >
-            <fieldset disabled={busy}>
-              {mode === "signup" && (
-                <Field label="Nome completo">
-                  <input
-                    name="name"
-                    autoComplete="name"
-                    required
-                    maxLength={100}
-                  />
-                </Field>
-              )}
-              {mode !== "reset" && (
-                <Field label="E-mail">
-                  <input
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    required
-                    maxLength={254}
-                  />
-                </Field>
-              )}
-              {mode !== "recover" && (
-                <div className="password-field">
-                  <Field
-                    label={mode === "reset" ? "Nova senha" : "Senha"}
-                    hint={
-                      mode === "signup" || mode === "reset"
-                        ? "Use pelo menos 12 caracteres."
-                        : undefined
-                    }
-                  >
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      autoComplete={
-                        mode === "login" ? "current-password" : "new-password"
-                      }
-                      required
-                      minLength={12}
-                      maxLength={128}
-                    />
-                  </Field>
-                  <button
-                    className="password-toggle"
-                    type="button"
-                    aria-label={
-                      showPassword ? "Ocultar senha" : "Mostrar senha"
-                    }
-                    aria-pressed={showPassword}
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "Ocultar" : "Mostrar"}
-                  </button>
-                </div>
-              )}
-              {mode === "signup" && (
-                <label className="checkbox-field">
-                  <input type="checkbox" required />
-                  Li as orientações de{" "}
-                  <Link href="/privacidade">privacidade</Link> e entendo a
-                  finalidade deste ambiente.
-                </label>
-              )}
-              <button className="button primary full" type="submit">
-                {busy
-                  ? "Aguarde…"
-                  : mode === "login"
-                    ? "Entrar"
-                    : mode === "signup"
-                      ? "Criar conta"
-                      : mode === "reset"
-                        ? "Redefinir senha"
-                        : "Enviar link de recuperação"}
-                <Icon name="arrow" size={18} />
-              </button>
-            </fieldset>
-            {accessError && (
-              <p className="form-error" role="alert">
-                {accessError}
-              </p>
+          <div className="form-card access-form-card">
+            {params.get("confirmado") && (
+              <p role="status">E-mail confirmado. Entre com sua senha.</p>
             )}
-          </form>
-        )}
-        {mode === "login" && (
-          <>
-            <p>
-              <Link href="/recuperar-acesso">Esqueci minha senha</Link>
-            </p>
-            <p>
-              Ainda não tem conta? <Link href="/cadastro">Cadastre-se</Link>
-            </p>
-            <details className="access-resend">
-              <summary>Reenviar confirmação de e-mail</summary>
+            {params.get("error") && (
+              <p role="alert">Link inválido ou expirado. Solicite outro.</p>
+            )}
+            {sent ? (
+              <div className="access-success" role="status">
+                <Icon name="check" size={28} />
+                <p>
+                  {mode === "signup"
+                    ? "Enviamos um e-mail de confirmação."
+                    : mode === "reset"
+                      ? "Senha redefinida. Suas sessões anteriores foram encerradas."
+                      : "Se a conta existir, enviaremos um link de recuperação."}
+                </p>
+                <ActionLink href="/entrar">Voltar para entrar</ActionLink>
+              </div>
+            ) : (
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  const email = value(new FormData(e.currentTarget), "email");
-                  const result = await authClient.sendVerificationEmail({
-                    email,
-                    callbackURL: `${window.location.origin}/entrar?confirmado=1`,
-                  });
-                  notify(
-                    result.error
-                      ? "Tente novamente mais tarde."
-                      : "Se a conta precisar de confirmação, o e-mail será enviado.",
-                    result.error ? "error" : "info",
-                  );
+                  setBusy(true);
+                  setAccessError("");
+                  const form = new FormData(e.currentTarget);
+                  try {
+                    const email = value(form, "email"),
+                      password = String(form.get("password") ?? "");
+                    if (mode === "signup") {
+                      const result = await authClient.signUp.email({
+                        name: value(form, "name"),
+                        email,
+                        password,
+                        callbackURL: `${window.location.origin}/entrar?confirmado=1`,
+                      });
+                      if (result.error) throw new Error(result.error.message);
+                      setSent(true);
+                    }
+                    if (mode === "login") {
+                      const result = await authClient.signIn.email({
+                        email,
+                        password,
+                      });
+                      if (result.error)
+                        throw new Error(
+                          "Não foi possível entrar. Confira seu e-mail, senha e confirmação da conta.",
+                        );
+                      const state = await refresh();
+                      router.push(
+                        state?.user?.roles.length
+                          ? "/painel"
+                          : "/cadastro/perfil",
+                      );
+                    }
+                    if (mode === "recover") {
+                      const result = await authClient.requestPasswordReset({
+                        email,
+                        redirectTo: `${window.location.origin}/redefinir-senha`,
+                      });
+                      if (result.error)
+                        throw new Error(
+                          "Não foi possível recuperar agora. Tente novamente.",
+                        );
+                      setSent(true);
+                    }
+                    if (mode === "reset") {
+                      const token = params.get("token");
+                      if (!token)
+                        throw new Error("Link inválido. Solicite outro.");
+                      const result = await authClient.resetPassword({
+                        token,
+                        newPassword: password,
+                      });
+                      if (result.error)
+                        throw new Error(
+                          "Link expirado ou já utilizado. Solicite outro.",
+                        );
+                      setSent(true);
+                    }
+                  } catch (error) {
+                    const message =
+                      error instanceof Error
+                        ? error.message
+                        : "Falha na conexão.";
+                    setAccessError(message);
+                    notify(message, "error");
+                  } finally {
+                    setBusy(false);
+                  }
                 }}
               >
-                <Field label="E-mail">
-                  <input type="email" name="email" required />
-                </Field>
-                <button className="text-button">Reenviar confirmação</button>
+                <fieldset disabled={busy}>
+                  {mode === "signup" && (
+                    <Field label="Nome completo">
+                      <input
+                        name="name"
+                        autoComplete="name"
+                        placeholder="Como você gostaria de ser chamado?"
+                        required
+                        maxLength={100}
+                      />
+                    </Field>
+                  )}
+                  {mode !== "reset" && (
+                    <Field label="E-mail">
+                      <input
+                        type="email"
+                        name="email"
+                        autoComplete="email"
+                        placeholder="voce@exemplo.com"
+                        required
+                        maxLength={254}
+                      />
+                    </Field>
+                  )}
+                  {mode !== "recover" && (
+                    <div className="password-field">
+                      <Field
+                        label={mode === "reset" ? "Nova senha" : "Senha"}
+                        hint={
+                          mode === "signup" || mode === "reset"
+                            ? "Use pelo menos 12 caracteres."
+                            : undefined
+                        }
+                      >
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          name="password"
+                          placeholder={
+                            mode === "login"
+                              ? "Digite sua senha"
+                              : "Pelo menos 12 caracteres"
+                          }
+                          autoComplete={
+                            mode === "login"
+                              ? "current-password"
+                              : "new-password"
+                          }
+                          required
+                          minLength={12}
+                          maxLength={128}
+                        />
+                      </Field>
+                      <button
+                        className="password-toggle"
+                        type="button"
+                        aria-label={
+                          showPassword ? "Ocultar senha" : "Mostrar senha"
+                        }
+                        aria-pressed={showPassword}
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? "Ocultar" : "Mostrar"}
+                      </button>
+                    </div>
+                  )}
+                  {mode === "signup" && (
+                    <label className="checkbox-field">
+                      <input type="checkbox" required />
+                      Li as orientações de{" "}
+                      <Link href="/privacidade">privacidade</Link> e entendo a
+                      finalidade deste ambiente.
+                    </label>
+                  )}
+                  <button className="button primary full" type="submit">
+                    {busy
+                      ? "Aguarde…"
+                      : mode === "login"
+                        ? "Entrar"
+                        : mode === "signup"
+                          ? "Criar conta"
+                          : mode === "reset"
+                            ? "Redefinir senha"
+                            : "Enviar link de recuperação"}
+                    <Icon name="arrow" size={18} />
+                  </button>
+                </fieldset>
+                {accessError && (
+                  <p className="form-error" role="alert">
+                    {accessError}
+                  </p>
+                )}
               </form>
-            </details>
-          </>
-        )}
+            )}
+            {mode === "login" && (
+              <>
+                <p>
+                  <Link href="/recuperar-acesso">Esqueci minha senha</Link>
+                </p>
+                <p>
+                  Ainda não tem conta? <Link href="/cadastro">Cadastre-se</Link>
+                </p>
+                <details className="access-resend">
+                  <summary>Reenviar confirmação de e-mail</summary>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const email = value(
+                        new FormData(e.currentTarget),
+                        "email",
+                      );
+                      const result = await authClient.sendVerificationEmail({
+                        email,
+                        callbackURL: `${window.location.origin}/entrar?confirmado=1`,
+                      });
+                      notify(
+                        result.error
+                          ? "Tente novamente mais tarde."
+                          : "Se a conta precisar de confirmação, o e-mail será enviado.",
+                        result.error ? "error" : "info",
+                      );
+                    }}
+                  >
+                    <Field label="E-mail para reenviar confirmação">
+                      <input
+                        type="email"
+                        name="email"
+                        autoComplete="email"
+                        required
+                      />
+                    </Field>
+                    <button className="text-button">
+                      Reenviar confirmação
+                    </button>
+                  </form>
+                </details>
+              </>
+            )}
+            {mode !== "login" && (
+              <p>
+                Já tem uma conta? <Link href="/entrar">Entrar</Link>
+              </p>
+            )}
+          </div>
+        </div>
+        <p className="access-privacy">
+          Seus dados merecem cuidado.{" "}
+          <Link href="/privacidade">
+            Conheça as orientações de privacidade.
+          </Link>
+        </p>
       </div>
+      <figure className="access-art">
+        <ConectaFlow className="access-flow" />
+        <Image
+          src={
+            mode === "login"
+              ? "/images/cinematic-v6/login.webp"
+              : "/images/cinematic-v6/signup.webp"
+          }
+          alt={
+            mode === "login"
+              ? "Retrato ilustrativo de uma profissional do cuidado."
+              : "Cena ilustrativa de duas mulheres conversando sobre trabalho."
+          }
+          width={1024}
+          height={1536}
+          sizes="(max-width: 767px) 1px, 600px"
+          preload
+        />
+        <span className="access-art-mark" aria-hidden="true">
+          <Icon name="leaf" size={25} />
+        </span>
+        <figcaption>
+          <h2>
+            {mode === "login"
+              ? "Seu trabalho. Sua história. Seu lugar."
+              : "O cuidado aproxima. O respeito conecta."}
+          </h2>
+          <p>
+            Um espaço para encontrar oportunidades, conversar e construir
+            relações de trabalho com respeito.
+          </p>
+          <small>Imagem ilustrativa criada para este projeto.</small>
+        </figcaption>
+      </figure>
     </section>
   );
 }

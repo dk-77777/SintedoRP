@@ -1,0 +1,106 @@
+/* Small feedback is CSS-owned; scene timelines are GSAP-owned. */
+.live-application .button {
+  transition:
+    background var(--duration-fast),
+    border-color var(--duration-fast),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast);
+}
+.live-application .button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+.live-application :is(.button, .text-link, .hero-support) svg:last-child {
+  transition: transform var(--duration-medium) var(--ease-out);
+}
+@media (hover: hover) {
+  .live-application
+    :is(.button, .text-link, .hero-support):hover
+    svg:last-child {
+    transform: translateX(3px);
+  }
+}
+.live-application .field :is(input, textarea, select):user-invalid {
+  border-color: #a32f24;
+  box-shadow: 0 0 0 1px #a32f24;
+}
+.live-application .notice,
+.live-application .access-success {
+  animation: state-enter 240ms var(--ease-out);
+}
+.live-application details[open] > :not(summary) {
+  animation: state-enter 220ms var(--ease-out);
+}
+.live-application .live-sidebar nav a {
+  transition:
+    background var(--duration-fast),
+    color var(--duration-fast),
+    box-shadow var(--duration-fast);
+}
+.live-application .stat-card {
+  transition:
+    box-shadow var(--duration-medium),
+    border-color var(--duration-medium);
+}
+.live-application .data-table tbody tr {
+  transition: background var(--duration-fast);
+}
+.live-application .data-table tbody tr:hover {
+  background: var(--cream);
+}
+@keyframes state-enter {
+  from {
+    transform: translateY(5px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .live-application *,
+  .live-application *::before,
+  .live-application *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .flow-halo {
+    filter: none;
+  }
+  .portrait-parallax {
+    transform: none !important;
+  }
+}
+
+.workspace-skeleton {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 32px;
+}
+.workspace-skeleton i {
+  height: 130px;
+  border-radius: 14px;
+  background: var(--cream);
+  animation: skeleton-breathe 1600ms ease-in-out infinite alternate;
+}
+@keyframes skeleton-breathe {
+  to {
+    opacity: 0.5;
+  }
+}
+@media (max-width: 600px) {
+  .workspace-skeleton {
+    grid-template-columns: 1fr;
+  }
+  .workspace-skeleton i {
+    height: 85px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workspace-skeleton i {
+    animation: none;
+  }
+}

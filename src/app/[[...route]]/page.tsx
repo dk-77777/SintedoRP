@@ -13,6 +13,14 @@ export default async function Page({
   const demo = route[0] === "demo" && process.env.ENABLE_DEMO === "true";
   if (demo || process.env.APP_MODE === "prototype")
     return <Prototype path={"/" + (demo ? route.slice(1) : route).join("/")} />;
+  if (route.length === 0) {
+    return (
+      <LiveApplication
+        path="/"
+        demoEnabled={process.env.ENABLE_DEMO === "true"}
+      />
+    );
+  }
   return (
     <Suspense fallback={<p role="status">Preparando sua conexão…</p>}>
       <LiveApplication

@@ -15,10 +15,12 @@
     "admin:grant": "tsx scripts/grant-admin.ts",
     "test:server": "tsx --test tests/server/*.test.ts",
     "format": "prettier --write src scripts tests *.ts *.json docs README.md",
-    "test:live": "playwright test -c playwright.live.config.ts"
+    "test:live": "playwright test -c playwright.live.config.ts",
+    "test:visual": "playwright test -c playwright.visual.config.ts"
   },
   "dependencies": {
     "better-auth": "1.7.7",
+    "gsap": "^3.15.0",
     "next": "16.4.0",
     "nodemailer": "10.0.15",
     "pg": "8.16.3",
@@ -41,5 +43,8 @@
     "tsx": "4.20.6",
     "typescript": "5.9.3"
   },
-  "type": "module"
+  "type": "module",
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
 }

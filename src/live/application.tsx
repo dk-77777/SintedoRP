@@ -47,6 +47,19 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
     refresh,
   } = useLive();
   const router = useRouter();
+  const isAccess = [
+    "/entrar",
+    "/cadastro",
+    "/recuperar-acesso",
+    "/redefinir-senha",
+  ].includes(path);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 24);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   const [menu, setMenu] = useState(false);
   const [workspaceMenu, setWorkspaceMenu] = useState(false);
   const [retrying, setRetrying] = useState(false);
@@ -95,11 +108,20 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
   const allowed =
     !!user && (!required || required.some((r) => user.roles.includes(r)));
   let content: React.ReactNode;
-  if (!ready)
+  if (path === "/") content = <Home />;
+  else if (!ready)
     content = (
       <section className="container page-section">
         <h1 tabIndex={-1}>Carregando</h1>
         <p role="status">Só um momento…</p>
+        <div className="workspace-skeleton" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+        <noscript>
+          Ative o JavaScript para acessar sua conta e os dados da plataforma.
+        </noscript>
       </section>
     );
   else if (!state && connectionError)
@@ -144,7 +166,6 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
         </Empty>
       </section>
     );
-  else if (path === "/") content = <Home />;
   else if (path === "/vagas") content = <Jobs />;
   else if (path.startsWith("/vagas/"))
     content = <JobDetail id={path.split("/")[2]} />;
@@ -252,6 +273,9 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
           </span>
           <button
             id="workspace-menu-toggle"
+            aria-label={
+              workspaceMenu ? "Fechar menu da conta" : "Menu da conta"
+            }
             className="button secondary small"
             aria-controls="workspace-navigation"
             aria-expanded={workspaceMenu}
@@ -350,6 +374,7 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
       className="live-application"
       data-private={privateArea}
       data-home={path === "/"}
+      data-access={isAccess}
     >
       <a className="skip-link" href="#conteudo">
         Pular para o conteúdo
@@ -360,17 +385,54 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
           {demoEnabled && <Link href="/demo">Explorar demonstração</Link>}
         </div>
       </div>
-      <header className="site-header">
+      <header className="site-header" data-scrolled={scrolled}>
         <div className="container header-inner">
           <Brand />
+          {isAccess && (
+            <Link
+              className="access-header-link"
+              href={path === "/cadastro" ? "/entrar" : "/cadastro"}
+            >
+              <span>
+                {path === "/cadastro"
+                  ? "Já tem conta?"
+                  : "Ainda não tem conta?"}
+              </span>
+              <strong>{path === "/cadastro" ? "Entrar" : "Criar conta"}</strong>
+            </Link>
+          )}
           <nav
             id="public-navigation"
             className={`header-nav ${menu ? "open" : ""}`}
             aria-label="Navegação principal"
           >
-            <Link href="/vagas">Vagas</Link>
-            <Link href="/como-funciona">Como funciona</Link>
-            <Link href="/contato">Sindicato</Link>
+            <Link href="/" aria-current={path === "/" ? "page" : undefined}>
+              Início
+            </Link>
+            <Link
+              href="/vagas"
+              aria-current={path.startsWith("/vagas") ? "page" : undefined}
+            >
+              Vagas
+            </Link>
+            <Link
+              href="/como-funciona"
+              aria-current={path === "/como-funciona" ? "page" : undefined}
+            >
+              Como funciona
+            </Link>
+            <Link
+              href="/contato"
+              aria-current={path === "/contato" ? "page" : undefined}
+            >
+              Sindicato
+            </Link>
+            <Link
+              href="/atendimento"
+              aria-current={path === "/atendimento" ? "page" : undefined}
+            >
+              Atendimento
+            </Link>
             <Link className="mobile-access" href={user ? "/painel" : "/entrar"}>
               {user ? "Minha área" : "Entrar"}
             </Link>
@@ -406,7 +468,7 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
                   Entrar
                 </Link>
                 <ActionLink href="/cadastro" small>
-                  Começar agora <Icon name="arrow" size={17} />
+                  Criar conta {path !== "/" && <Icon name="arrow" size={17} />}
                 </ActionLink>
               </>
             )}
@@ -470,13 +532,16 @@ function Shell({ path, demoEnabled }: { path: string; demoEnabled: boolean }) {
           <div>
             <Brand />
             <p>
-              Conexões que valorizam
+              Portal de oportunidades e serviços
               <br />
-              quem cuida de tantas histórias.
+              para o trabalho doméstico.
             </p>
           </div>
           <div className="footer-links">
+            <Link href="/vagas">Consultar vagas</Link>
+            <Link href="/atendimento">Atendimento sindical</Link>
             <Link href="/como-funciona">Como funciona</Link>
+            <Link href="/painel">Minha área</Link>
             <Link href="/contato">Fale com o sindicato</Link>
             <Link href="/privacidade">Privacidade e dados</Link>
           </div>

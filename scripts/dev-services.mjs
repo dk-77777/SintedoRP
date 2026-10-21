@@ -1,10 +1,69 @@
 import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { randomBytes } from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 
 const root = resolve(import.meta.dirname, "..");
 const local = resolve(root, ".local");
+const dockerCandidates = [
+  "docker",
+  ...(process.platform === "win32"
+    ? [
+        process.env.LOCALAPPDATA &&
+          join(
+            process.env.LOCALAPPDATA,
+            "Programs",
+            "DockerDesktop",
+            "resources",
+            "bin",
+            "docker.exe",
+          ),
+        process.env.ProgramFiles &&
+          join(
+            process.env.ProgramFiles,
+            "Docker",
+            "Docker",
+            "resources",
+            "bin",
+            "docker.exe",
+          ),
+      ].filter(Boolean)
+    : []),
+];
+const docker = dockerCandidates.find(
+  (command) =>
+    spawnSync(command, ["--version"], { stdio: "ignore", windowsHide: true })
+      .status === 0,
+);
+if (!docker)
+  throw new Error(
+    "Docker não encontrado. Instale o Docker Desktop e abra-o antes de executar npm run services.",
+  );
+const run = (args, options = {}) =>
+  execFileSync(docker, args, {
+    encoding: "utf8",
+    windowsHide: true,
+    ...options,
+  });
+try {
+  run(["info", "--format", "{{.ServerVersion}}"], { stdio: "ignore" });
+} catch {
+  throw new Error(
+    "O motor do Docker não está disponível. Abra o Docker Desktop e aguarde Engine running.",
+  );
+}
+const containerNames = run(["ps", "-a", "--format", "{{.Names}}"])
+  .trim()
+  .split(/\r?\n/);
+if (
+  containerNames.includes("conecta-sintedorp-db") &&
+  (!existsSync(resolve(root, ".env.local")) ||
+    !existsSync(resolve(local, "services.json")))
+) {
+  throw new Error(
+    "Já existe um banco local deste projeto. Recupere a configuração privada .env.local e .local da instalação existente antes de continuar. O banco foi preservado.",
+  );
+}
 mkdirSync(local, { recursive: true, mode: 0o700 });
 const configFile = resolve(local, "services.json");
 let config;
@@ -39,8 +98,6 @@ if (!existsSync(envFile))
     { mode: 0o600, flag: "wx" },
   );
 
-const run = (args, options = {}) =>
-  execFileSync("docker", args, { encoding: "utf8", ...options });
 const pgImage =
   "postgres@sha256:3645570cccdfa447589da9f57dd740faa29b30938e861289a5574b6ca6b03826";
 const mailImage =
@@ -59,7 +116,7 @@ if (!existsSync(pgEnv))
   );
 function start(name, args) {
   const names = run(["ps", "-a", "--format", "{{.Names}}"]);
-  if (names.split("\n").includes(name))
+  if (names.trim().split(/\r?\n/).includes(name))
     run(["start", name], { stdio: "ignore" });
   else run(["run", "--detach", "--name", name, ...args], { stdio: "ignore" });
 }
