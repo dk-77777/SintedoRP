@@ -191,8 +191,7 @@ Fontes oficiais consultadas em 21 de outubro de 2026. Condições e preços pode
 
 ### Evidências locais utilizadas
 
-- `artifacts/local-connection/QA.md` e `qa.json`: recuperação e verificação real da conexão local.
-- `artifacts/home-empty/QA.md` e `qa.json`: ajuste e conferência do estado sem vagas.
+- Registros locais de recuperação da conexão e do estado sem vagas: arquivados em `.local/cleanup-2026-10-21/artifacts/{local-connection,home-empty}/`, fora do Git. O diagnóstico e o procedimento de recuperação estão no guia de operação local.
 - `src/live/provider.tsx`: atualização automática enquanto a aba está visível.
 - `src/app/layout.tsx`: configuração de indexação consultada.
 - `src/server/deployment.ts`, `docs/PUBLICACAO.md` e `docs/HOSPEDAGEM-GRATUITA.md`: requisitos de implantação previstos no projeto.

@@ -9,7 +9,7 @@ export default defineConfig({
   ],
   workers: 1,
   reporter: "list",
-  outputDir: ".impeccable/review/test-results",
+  outputDir: "test-results/visual",
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
     ...(process.platform === "win32" ? { channel: "chrome" } : {}),

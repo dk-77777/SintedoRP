@@ -5,7 +5,7 @@ O repositório reúne o código, imagens necessárias, migrações, testes e doc
 ## Primeiro acesso
 
 1. Use sua própria conta GitHub. Para enviar alterações diretamente ao repositório, peça ao proprietário acesso como colaborador e aceite o convite.
-2. Clone pelo GitHub Desktop ou pelo comando Clone do VS Code. Enquanto a atualização não estiver integrada à `main`, selecione a branch `atualizacao-v6-2026-10-21` após clonar. Abra a pasta clonada no editor.
+2. Clone pelo GitHub Desktop ou pelo comando Clone do VS Code. Use a branch `main` para a versão integrada. Para revisar uma alteração pendente, selecione a branch indicada no pull request. Abra a pasta clonada no editor.
 3. Instale Node.js 24 e Docker Desktop. O projeto declara Node 24 em `.nvmrc` e `package.json`.
 4. Abra o Docker Desktop e aguarde Engine running. No terminal da pasta do projeto, execute os comandos abaixo.
 
@@ -18,10 +18,10 @@ npm.cmd run dev
 
 No macOS/Linux, use `npm` no lugar de `npm.cmd`. No Windows, o script procura o Docker no PATH e nas instalações usuais do Docker Desktop. As imagens são baixadas na primeira execução, o que exige acesso à internet. A porta 5432 deve estar disponível para este banco; 1025 e 8025 são usadas pelo e-mail de teste.
 
-Para clonar a atualização diretamente pelo terminal:
+Para clonar o projeto diretamente pelo terminal:
 
 ```sh
-git clone --branch atualizacao-v6-2026-10-21 https://github.com/dk-77777/SintedoRP.git
+git clone https://github.com/dk-77777/SintedoRP.git
 cd SintedoRP
 ```
 
