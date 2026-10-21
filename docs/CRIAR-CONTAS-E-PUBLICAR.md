@@ -1,6 +1,6 @@
 # Criar os projetos e publicar a apresentação acadêmica
 
-O usuário informou que ainda não criou os projetos externos. O ambiente local funciona, mas não foi publicado na Vercel ou no Supabase. O roteiro abaixo prepara essa implantação. Confirme as condições e cotas atuais dos planos em [HOSPEDAGEM-GRATUITA.md](HOSPEDAGEM-GRATUITA.md); Vercel Hobby é destinado a uso pessoal/não comercial.
+Este roteiro prepara uma implantação em Vercel e Supabase, caso essa seja a opção aprovada pela equipe. O usuário já possui um projeto Supabase; confira seu estado e a configuração antes de criar outro. A publicação externa desta versão ainda não foi validada. Analise as opções no [relatório de hospedagem](RELATORIO-HOSPEDAGEM.md) e consulte o [roteiro técnico](HOSPEDAGEM-GRATUITA.md).
 
 ## 1. Supabase: criar o banco
 
@@ -12,7 +12,7 @@ Separe duas conexões obtidas no painel: a conexão de runtime adequada para ser
 
 ## 2. Vercel: criar o projeto Next.js
 
-Abra [Vercel](https://vercel.com/), entre com a conta que tem acesso ao repositório e importe `dk-77777/SintedoRP` quando os arquivos desta versão estiverem disponíveis no GitHub. O checkout atual contém arquivos locais ainda sem commit/push; o remoto consultado não retornou branches. Os arquivos locais não aparecem automaticamente ao importar o repositório.
+Abra [Vercel](https://vercel.com/), entre com a conta que tem acesso ao repositório e importe `dk-77777/SintedoRP`. Use a `main` para a versão integrada. Para testar uma alteração pendente, selecione a branch do pull request e utilize banco separado para testes.
 
 No projeto, selecione Next.js e Node.js 24. Use `npm ci` para instalar e `npm run build` para compilar. Mantenha a saída padrão detectada pelo framework. Escolha uma origem HTTPS de produção estável e registre essa origem em `BETTER_AUTH_URL`; não use a URL temporária de cada preview.
 
@@ -71,5 +71,3 @@ node --env-file=.local/migration.env --import=tsx scripts/grant-admin.ts pessoa@
 O endereço acima é um exemplo; substitua-o pela conta real já existente, verificada e autorizada. Essa concessão registra auditoria e não cria senha padrão. Confira os fluxos com trabalhadores, empregadores e sindicato separados. Defina os contatos, atendimento e política institucional antes de utilizar dados pessoais reais. `SITE_POLICY_STATUS` é somente um registro operacional e não aprova nem substitui o texto mostrado pelo site.
 
 Os comandos administrativos precisam de um checkout com `tsx`, arquivos SQL e demais dependências; não são incluídos no container de runtime standalone. Para a verificação local das ferramentas, use `npm run test:server` e `npm run test:live -- --grep 'Implantação:'`.
-
-Modelo recomendado para configuração/implantação: GPT-6.1 Sol. Para revisão complementar das permissões e políticas: GPT-6 Astra. A recomendação não muda o modelo ativo automaticamente.

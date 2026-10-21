@@ -1,6 +1,6 @@
 # Preparação para publicação
 
-O ambiente em nuvem e o MVP local estão preparados. Não houve envio ao GitHub nem publicação pública. O repositório remoto informado estava vazio; o código está no checkout local e não existe um commit enviado para `main`.
+O código está disponível no GitHub. A branch `main` reúne as alterações integradas pela equipe; atualizações pendentes ficam em branches próprias para revisão. Compartilhar o código não publica a aplicação em uma hospedagem; a implantação externa ainda precisa ser configurada e validada.
 
 ## Pacote de execução
 
@@ -48,13 +48,11 @@ A interface carrega um conjunto de dados autorizado por sessão; paginação de 
 
 Permissões sindicais são provisionadas por CLI, sem convites por e-mail ou painel de concessão. O atendimento trabalha com relatos enviados; a equipe sindical não recebe acesso geral às conversas privadas. Suspensão encerra sessões, mas não apaga mensagens, histórico ou auditoria. Uma política de retenção/exclusão precisa ser definida antes do uso institucional.
 
-Auditoria automatizada de acessibilidade e testes de autorização cobrem os percursos descritos em `ETAPAS-04-A-07-RESULTADOS.md`; não substituem revisão institucional, avaliação manual assistiva completa ou auditoria de segurança externa. GPT-6 Astra é a recomendação para essa revisão complementar; a indicação não afirma troca do modelo ativo.
+Os testes de acessibilidade, autorização e fluxos estão em `tests/`. Eles não substituem revisão institucional, avaliação manual assistiva completa ou auditoria de segurança externa.
 
-## Ambiente em nuvem
+## Implantação externa
 
-Foram preparados PostgreSQL, Mailpit, dependências, migrações, build, testes e instruções reutilizáveis. Os campos `install_script` e `start_skill` foram salvos no rascunho da configuração, com resultado confirmado pelo serviço. O produto oferece a revisão/salvamento e a publicação desse ambiente. Publicar o ambiente cria uma versão de configuração/snapshot; processos vivos precisam ser reiniciados conforme `start_skill`.
-
-A publicação do ambiente de desenvolvimento não publica o site para participantes reais e não configura automaticamente domínio, SMTP ou APIs externas.
+O desenvolvimento local utiliza Docker, PostgreSQL e Mailpit. A versão pública precisa de banco, domínio, SMTP e variáveis próprios, configurados na hospedagem escolhida. Não depende de manter este computador ligado.
 
 O roteiro para apresentação acadêmica em Vercel e Supabase está em [HOSPEDAGEM-GRATUITA.md](HOSPEDAGEM-GRATUITA.md). Não foi criada implantação externa; planos, restrições e cotas devem ser conferidos antes da contratação/ativação.
 

@@ -1,16 +1,12 @@
-> **Trabalho em equipe:** configuração local, revisão de alterações e compartilhamento em [docs/COLABORACAO.md](docs/COLABORACAO.md). Diagnóstico e opções para a entrega em [docs/RELATORIO-HOSPEDAGEM.md](docs/RELATORIO-HOSPEDAGEM.md).
->
-> **Redesign V6:** comece por [LEIA-ME-V6.md](LEIA-ME-V6.md). Continuidade e validação em [docs/ai-development/HANDOFF.md](docs/ai-development/HANDOFF.md).
-
 # Conecta SINTEDORP
 
 MVP funcional para conectar trabalhadores domésticos a empregadores PF/PJ, com análise de vagas e mediação sindical. Interface em português, responsiva, com PostgreSQL e sessões reais. A demonstração anterior continua disponível em `/demo`, separada dos dados do servidor.
 
 O ambiente atual é de desenvolvimento: use dados de teste. Consulta cadastral externa, e-mail externo e publicação institucional ainda não estão configurados.
 
-A [prévia visual independente](docs/PREVIA-VISUAL.md) permite inspecionar 37 telas atuais num único HTML, com dados fictícios e navegação entre perfis. O arquivo e o ZIP com imagens/instruções ficam em `artifacts/`; as operações reais continuam dependendo do servidor. O [redesign da interface](docs/REDESIGN-2026.md) reorganiza navegação, busca, painéis, acesso, histórico e relatórios para desktop e celular.
+Para instalar, executar e trabalhar em equipe, comece pelo [guia de colaboração](docs/COLABORACAO.md). O [guia de operação local](docs/COMO-ABRIR-E-MANTER-O-SITE.md) explica como retomar os serviços. O [relatório de hospedagem](docs/RELATORIO-HOSPEDAGEM.md) reúne as opções para a entrega ao sindicato.
 
-Paleta atual: [laranja queimado, marfim e carvão](docs/PALETA-LARANJA.md), com cores e contrastes documentados.
+Os estilos compartilhados ficam em `src/styles/`. As fotografias utilizadas na Home e nas telas de acesso são ilustrações geradas, com pessoas fictícias; seus metadados de origem acompanham os arquivos em `public/images/cinematic-v6/`. A fonte Manrope é distribuída localmente com sua licença em `public/fonts/`.
 
 ## Executar no ambiente em nuvem
 
@@ -65,6 +61,7 @@ Rotas principais: `/vagas`, `/trabalhador`, `/empregador`, `/sindicato`, `/mensa
 npm run typecheck
 npm run build
 npm run test:server
+npm run test:visual
 npm run test:live
 npm run test:e2e
 npm audit --omit=dev
@@ -72,9 +69,7 @@ npm audit --omit=dev
 
 Os testes funcionais criam e removem um banco temporário local, usam e-mails capturados pelo Mailpit e iniciam o servidor na porta 3100. Recusam banco remoto ou sem identificação de teste. A suíte do protótipo usa a porta 3200 e `APP_MODE=prototype` apenas nesse processo. Ambas exigem suas portas livres e detectam Chromium em `/usr/bin/chromium`; alternativamente, use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` ou instale Chromium pelo procedimento oficial do Playwright.
 
-Resultados e limites estão em [docs/ETAPAS-04-A-07-RESULTADOS.md](docs/ETAPAS-04-A-07-RESULTADOS.md). Capturas ficam em `artifacts/live/`; relatórios locais em `playwright-report/`. Essas saídas são ignoradas pelo Git.
-
-A revisão do encerramento e os resultados mais recentes estão em [docs/ETAPA-08-RESULTADOS.md](docs/ETAPA-08-RESULTADOS.md).
+Os testes visuais usam o servidor em `localhost:3000`, com respostas simuladas de API; não comprovam a integração real. No Windows, usam o Google Chrome instalado. Os dados de teste compartilhados ficam em `scripts/preview-data.ts` e a referência CSS de regressão em `tests/fixtures/`. Capturas e relatórios são saídas locais ignoradas pelo Git.
 
 ## Estrutura e migrações
 
@@ -94,6 +89,6 @@ O build gera `.next/standalone`; `npm run start` copia os arquivos estáticos e 
 
 Configuração e pendências externas: [docs/PUBLICACAO.md](docs/PUBLICACAO.md). O projeto pode ser desenvolvido e testado sem contratar uma API de CPF/CNPJ. A consulta externa só deve ser ativada após escolha do provedor, contrato e definição da finalidade/base legal.
 
-Para apresentação acadêmica com planos gratuitos, o caminho recomendado é [Vercel + Supabase](docs/HOSPEDAGEM-GRATUITA.md). A condição de uso pessoal/não comercial do Vercel Hobby precisa ser considerada antes de uma adoção institucional. `DATABASE_POOL_MAX` permite limitar entre 1 e 12 conexões por instância; o padrão local é 12.
+Compare as opções e pendências no [relatório de hospedagem](docs/RELATORIO-HOSPEDAGEM.md). O [roteiro Vercel + Supabase](docs/HOSPEDAGEM-GRATUITA.md) detalha essa alternativa, cuja elegibilidade deve ser confirmada antes do uso institucional. `DATABASE_POOL_MAX` permite limitar entre 1 e 12 conexões por instância; o padrão local é 12.
 
-O passo a passo para abrir os projetos, cadastrar variáveis e executar migrações está em [docs/CRIAR-CONTAS-E-PUBLICAR.md](docs/CRIAR-CONTAS-E-PUBLICAR.md). `npm run deploy:prepare` prepara modelos privados sem sobrescrever arquivos; `npm run deploy:check` valida variáveis explicitamente injetadas sem imprimir valores. A opção `--connect` verifica banco/checksums e autenticação SMTP sem enviar mensagens ou publicar o site. Resultados em [docs/ETAPA-09-RESULTADOS.md](docs/ETAPA-09-RESULTADOS.md).
+O passo a passo para abrir os projetos, cadastrar variáveis e executar migrações está em [docs/CRIAR-CONTAS-E-PUBLICAR.md](docs/CRIAR-CONTAS-E-PUBLICAR.md). `npm run deploy:prepare` prepara modelos privados sem sobrescrever arquivos; `npm run deploy:check` valida variáveis explicitamente injetadas sem imprimir valores. A opção `--connect` verifica banco/checksums e autenticação SMTP sem enviar mensagens ou publicar o site.

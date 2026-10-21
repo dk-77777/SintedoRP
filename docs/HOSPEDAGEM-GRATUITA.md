@@ -1,6 +1,6 @@
 # Hospedagem para apresentação acadêmica
 
-Recomendação: **Vercel Hobby para o Next.js + Supabase Free para o PostgreSQL**, com um provedor SMTP que ofereça plano gratuito. O projeto usa Better Auth no próprio servidor; não usa Supabase Auth nem exige uma chave pública do Supabase no navegador.
+Este roteiro descreve a alternativa **Vercel para o Next.js + Supabase para o PostgreSQL**, com um provedor SMTP compatível. A decisão sobre planos e elegibilidade está no [relatório de hospedagem](RELATORIO-HOSPEDAGEM.md). O projeto usa Better Auth no próprio servidor; não usa Supabase Auth nem exige uma chave pública do Supabase no navegador.
 
 O Hobby da Vercel é destinado a uso pessoal e não comercial. A apresentação acadêmica deve respeitar essa condição; antes de uma operação oficial do sindicato, confira elegibilidade ou escolha um plano/hospedagem compatível. Planos gratuitos têm cotas e podem ter restrições de disponibilidade, recursos e inatividade. Não há garantia de custo zero se ultrapassar limites ou ativar recursos pagos. O subdomínio fornecido pela hospedagem permite começar sem comprar domínio; um domínio institucional e seu serviço de e-mail podem ter custo.
 
@@ -27,7 +27,7 @@ Os default privileges valem para objetos criados pelo papel que executa o comand
 
 ## Vercel
 
-1. Disponibilize a versão revisada do código no GitHub e importe o repositório. O checkout atual ainda não tem commit/push. A preparação local não envia arquivos automaticamente.
+1. Importe o repositório GitHub `dk-77777/SintedoRP`. Use a branch `main` para a versão integrada; branches de alterações pendentes devem utilizar ambiente de teste separado.
 2. Escolha Next.js, raiz do projeto, Node.js 24, instalação `npm ci` e build `npm run build`. Na Vercel, mantenha a saída padrão detectada pelo framework; o comando standalone/Docker é a alternativa para outras hospedagens.
 3. Cadastre as variáveis na configuração segura do projeto, conforme [PUBLICACAO.md](PUBLICACAO.md). Use a conexão runtime do banco em `DATABASE_URL`, `DATABASE_POOL_MAX=2`, uma origem HTTPS estável em `BETTER_AUTH_URL`, novos `BETTER_AUTH_SECRET` e `DOCUMENT_KEY`, `ENABLE_DEMO=false`, `SMTP_URL` e `MAIL_FROM` próprios. Não use prefixo `NEXT_PUBLIC_` para segredos. O limite de conexões é **por instância**; a concorrência total ainda precisa ser acompanhada.
 4. Configure e teste o cabeçalho de IP efetivamente substituído pela plataforma antes de preencher `TRUSTED_IP_HEADER`. Consulte a documentação atual do proxy; não confie num cabeçalho enviado livremente pelo visitante. A configuração padrão mantém um limite compartilhado, com impacto para vários usuários.
@@ -39,6 +39,6 @@ Escolha um provedor SMTP com condições gratuitas adequadas, como Brevo, ou out
 
 Após implantar, confirme `/api/health`, cadastro, recebimento de e-mail, verificação, login e recuperação no domínio final. Provisione a primeira conta sindical já verificada por `npm run admin:grant`, com a conexão externa injetada somente no processo administrativo. Teste vagas, candidaturas, mensagens, confirmação/encerramento de experiência e relatório com contas de teste separadas. Faça exportação e restauração de backup antes de armazenar dados institucionais.
 
-Contas nos provedores, credenciais, remetente e origem HTTPS ainda não foram fornecidos. Os valores devem ser inseridos nos gerenciadores de segredos dos serviços; nunca enviados no chat ou copiados para o Git. GPT-6.1 Sol é a recomendação para executar a implantação; GPT-6 Astra para uma revisão complementar das permissões e políticas, sem presumir troca automática de modelo.
+Credenciais, remetente e origem HTTPS precisam ser configurados e validados no ambiente escolhido. Os valores devem ser inseridos nos gerenciadores de segredos dos serviços; nunca enviados no chat ou copiados para o Git.
 
-Como os projetos ainda não foram criados, siga [CRIAR-CONTAS-E-PUBLICAR.md](CRIAR-CONTAS-E-PUBLICAR.md). A etapa 9 acrescenta modelos privados preservados e checagem estática/conectividade: banco e checksums por leitura; SMTP por conexão/autenticação, sem envio de mensagem. As ferramentas não criam contas ou publicam automaticamente.
+Siga [CRIAR-CONTAS-E-PUBLICAR.md](CRIAR-CONTAS-E-PUBLICAR.md) para configurar ou reutilizar os projetos. Os comandos `deploy:prepare` e `deploy:check` preparam modelos privados e verificam a configuração: banco e checksums por leitura; SMTP por conexão/autenticação, sem envio de mensagem. As ferramentas não criam contas ou publicam automaticamente.
