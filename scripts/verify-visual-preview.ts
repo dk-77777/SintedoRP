@@ -58,7 +58,7 @@ try {
   await page.setViewportSize({ width: 390, height: 960 });
   await page.locator("#preview-role").selectOption("trabalhador");
   await expect(page.locator("#workspace-navigation")).toBeHidden();
-  await page.getByRole("button", { name: "Menu", exact: true }).click();
+  await page.locator("#workspace-menu-toggle").click();
   await expect(page.locator("#workspace-navigation")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.locator("#workspace-navigation")).toBeHidden();
@@ -121,26 +121,18 @@ try {
   await page.goto("about:blank");
   await page.setContent(source);
   await page.setViewportSize({ width: 1440, height: 960 });
-  const sculpture = page.locator(".home-sculpture-image");
-  await sculpture.evaluate((image) => (image as HTMLImageElement).decode());
-  expect(await sculpture.getAttribute("src")).toMatch(
-    /^data:image\/webp;base64,/,
-  );
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  const motionLayer = page.locator(".home-sculpture-motion");
-  const beforeScroll = await motionLayer.evaluate(
-    (node) => getComputedStyle(node).transform,
-  );
-  await page.evaluate(() => window.scrollTo(0, 350));
-  await expect
-    .poll(() =>
-      motionLayer.evaluate((node) => getComputedStyle(node).transform),
-    )
-    .not.toBe(beforeScroll);
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(motionLayer).toHaveCSS("transform", "none");
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.emulateMedia({ reducedMotion: "no-preference" });
+  for (const image of await page.locator("img").all()) {
+    expect(await image.getAttribute("src")).toMatch(
+      /^data:image\/webp;base64,/,
+    );
+    await image.evaluate((node) => {
+      const image = node as HTMLImageElement;
+      image.loading = "eager";
+      return image.decode();
+    });
+  }
+  await expect(page.locator("#home-title")).toBeVisible();
+  await expect(page.locator("#care-title")).toBeVisible();
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 960 });
     await page.screenshot({
@@ -152,7 +144,7 @@ try {
   expect(errors).toEqual([]);
   expect(requests).toEqual([]);
   console.log(
-    `${views.length} telas verificadas em 360, 768 e 1440 px; menus, diálogos, conversas, CPF/CNPJ e senha passaram. Escultura offline, parallax e movimento reduzido verificados. Zero exceções JavaScript e zero requisições HTTP.`,
+    `${views.length} telas verificadas em 360, 768 e 1440 px; menus, diálogos, conversas, CPF/CNPJ e senha passaram. Fotos V6 incorporadas e títulos estáticos verificados. Motion completo é validado separadamente na aplicação. Zero exceções JavaScript e zero requisições HTTP.`,
   );
 } finally {
   await browser.close();

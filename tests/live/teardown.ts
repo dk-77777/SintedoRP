@@ -13,7 +13,8 @@ export default async function teardown() {
     throw new Error(
       "Limpeza recusada: banco não identificado como teste local.",
     );
-  url.pathname = "/sintedorp";
+  // Use the PostgreSQL maintenance database instead of assuming an app database name.
+  url.pathname = "/postgres";
   const db = new Pool({ connectionString: url.toString() });
   try {
     await db.query(`DROP DATABASE IF EXISTS "${database}" WITH (FORCE)`);

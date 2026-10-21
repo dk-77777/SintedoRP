@@ -1,3 +1,7 @@
+> **Trabalho em equipe:** configuração local, revisão de alterações e compartilhamento em [docs/COLABORACAO.md](docs/COLABORACAO.md). Diagnóstico e opções para a entrega em [docs/RELATORIO-HOSPEDAGEM.md](docs/RELATORIO-HOSPEDAGEM.md).
+>
+> **Redesign V6:** comece por [LEIA-ME-V6.md](LEIA-ME-V6.md). Continuidade e validação em [docs/ai-development/HANDOFF.md](docs/ai-development/HANDOFF.md).
+
 # Conecta SINTEDORP
 
 MVP funcional para conectar trabalhadores domésticos a empregadores PF/PJ, com análise de vagas e mediação sindical. Interface em português, responsiva, com PostgreSQL e sessões reais. A demonstração anterior continua disponível em `/demo`, separada dos dados do servidor.
@@ -10,7 +14,7 @@ Paleta atual: [laranja queimado, marfim e carvão](docs/PALETA-LARANJA.md), com 
 
 ## Executar no ambiente em nuvem
 
-Requisitos: Node.js 24, npm e Docker com daemon disponível. No Windows, abra o Docker Desktop e execute os mesmos comandos no PowerShell aberto na pasta extraída:
+Requisitos: Node.js 24, npm e Docker com daemon disponível. No checkout:
 
 ```sh
 npm ci
@@ -20,7 +24,7 @@ npm run build
 npm run start
 ```
 
-`services` inicia PostgreSQL 17 e Mailpit com imagens verificadas por digest. Gera segredos aleatórios em arquivos privados somente quando ausentes; preserva configurações e dados existentes. O banco fica fora do checkout em `/workspace/.state/sintedorp/postgres` no Linux e macOS e em `.local/postgres-data` no Windows. `.env.local` e `.local/` não devem ser compartilhados ou versionados. A caixa local captura e-mails de confirmação e recuperação, sem entrega externa.
+`services` inicia PostgreSQL 17 e Mailpit com imagens verificadas por digest. Gera segredos aleatórios em arquivos privados somente quando ausentes; preserva configurações e dados existentes. Novos bancos ficam em `.local/postgres-data/postgres` no Windows e em `/workspace/.state/sintedorp/postgres` no Linux/macOS. Containers existentes mantêm seu armazenamento original. `.env.local` e `.local/` não devem ser compartilhados ou versionados. A caixa local captura e-mails de confirmação e recuperação, sem entrega externa.
 
 Para editar, use `npm run dev`. A porta padrão é 3000. Se estiver ocupada por um serviço desconhecido, escolha outra e ajuste a origem de autenticação no mesmo processo:
 
